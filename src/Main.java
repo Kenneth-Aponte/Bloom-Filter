@@ -7,9 +7,14 @@ import java.util.Scanner;
  * @author Kenneth-Aponte
  *
  */
-public class BFContainer {
+public class Main {
 
-	public static class Main {
+	//Runs the project
+	public static void main(String[] args) {
+		Manager.run();
+	}
+
+	public static class Manager {
 		public static BloomFilter bF;//the bloom filter object
 		public static Scanner input = new Scanner(System.in);
 		public static final double FALSE_POSITIVE_PROBABILITY =  0.0000001;//final as this value is predetermined
@@ -19,8 +24,8 @@ public class BFContainer {
 		// /Users/kennethaponte/Documents/emails2.csv
 		// /Users/kennethaponte/Documents/emails2_test.csv
 
-		//Runs the project
-		public static void main(String[] args) {
+		//runs the projec
+		public static void run(){
 			File inputFile_1 = getInputFile("\nTo create the Bloom Filter, please provide the path to the input file: ");
 			bF = createAndPopulateBloomFilter(inputFile_1);
 			File inputFile_2 = getInputFile("\nTo test the Bloom Filter, please provide the path to the input file: ");
@@ -146,7 +151,7 @@ public class BFContainer {
 
 			return dataCount;
 		}
-	}//end of class Main
+	}//end of class Manager
 
 
 
@@ -216,5 +221,5 @@ public class BFContainer {
 		}
 	}//end of class BloomFilter
 
-}//end of class BFContainer
+}//end of class Main
 
