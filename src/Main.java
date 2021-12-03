@@ -8,6 +8,7 @@ import java.util.Scanner;
  *
  */
 
+//Both classes are wrapped under the Main classes
 public class Main {
 
 	public static void main(String[] args) {
@@ -19,7 +20,7 @@ public class Main {
 		public static Scanner input = new Scanner(System.in);
 		public static final double FALSE_POSITIVE_PROBABILITY =  0.0000001;//final as this value is predetermined
 
-		//Runs the project
+		//Runs the project when called from main
 		public static void run(){
 			System.out.println("\n\n-----------------------------------------");
 			System.out.println("| Welcome to the Bloom Filter project!! |");
@@ -28,7 +29,7 @@ public class Main {
 			File inputFile_1 = getInputFile("\nTo create the Bloom Filter, please provide the path to the input file: ");
 			bF = createAndPopulateBloomFilter(inputFile_1);
 			File inputFile_2 = getInputFile("\nTo test the Bloom Filter, please provide the path to the input file: ");
-			File resultFile = testBloomFilter(inputFile_2);
+			testBloomFilter(inputFile_2);
 
 			System.out.println("\n\n-------------");
 			System.out.println("| GoodBye!! |");
@@ -68,11 +69,11 @@ public class Main {
 			long hC = Math.round( ((float)fS/dC) * Math.log(2)); //k = round((m / n) * log(2));
 
 			System.out.println("\n--------------------------------------------------------------------------------------------------------------------");
-			System.out.println("\nCalculated parameters for the Bloom Filter \n");
-			System.out.println("\tNumber of items in the filter: " + Long.toString(dC));
-			System.out.println("\n\tProbability of false positives: " + Double.toString(FALSE_POSITIVE_PROBABILITY));
-			System.out.println("\n\tSize of filter in bits: " + Long.toString(fS));
-			System.out.println("\n\tNumber of hash functions: " + Long.toString(hC));
+			System.out.println("\nCalculated parameters for the Bloom Filter:\n");
+			System.out.println("\t-Number of items in the filter: " + Long.toString(dC));
+			System.out.println("\n\t-Probability of false positives: " + Double.toString(FALSE_POSITIVE_PROBABILITY));
+			System.out.println("\n\t-Size of filter in bits: " + Long.toString(fS));
+			System.out.println("\n\t-Number of hash functions: " + Long.toString(hC));
 			System.out.println("\n--------------------------------------------------------------------------------------------------------------------");
 
 			System.out.println("\nBloom Filter is being populated please wait...");
@@ -97,17 +98,17 @@ public class Main {
 		}
 
 		//Tests the bloom filter with the passed file.
-		public static File testBloomFilter(File inputFile){
-			File res = null;
+		public static boolean testBloomFilter(File inputFile){
+			File res;
 			if(getDataCount(inputFile) == 0){
 				System.out.println("Empty File provided!");
-				return res;//if the file is empty it returns null TODO: make an edge case for this scenario
+				return false;//if the file is empty it returns null
 			}
 
 			try {
 				Scanner	data = new Scanner(inputFile);
 				String parentDir = System.getProperty("user.dir");
-				res = new File(parentDir,"Result.csv");
+				res = new File(parentDir,"Results.csv");
 				FileWriter writer = new FileWriter(res);
 
 				writer.write("Email,Result\n");//first line of the file
@@ -128,15 +129,15 @@ public class Main {
 				data.close();
 				writer.close();
 				//finished populating the bloom filter
+
+				System.out.println("\n--------------------------------------------------------------------------------------------------------------------");
+				System.out.println("\nResult saved in: " + res.getAbsolutePath());
+				System.out.println("\n--------------------------------------------------------------------------------------------------------------------");
 			}
-			catch(Exception e){
+			catch(Exception e) {
 				System.out.println("An unexpected error has occurred:\n" + e);
 			}
-
-			System.out.println("\n--------------------------------------------------------------------------------------------------------------------");
-			System.out.println("\nResult saved in: " + res.getAbsolutePath());
-			System.out.println("\n--------------------------------------------------------------------------------------------------------------------");
-			return res;
+			return true;
 		}
 
 		//Counts the data on the input file.
@@ -146,7 +147,7 @@ public class Main {
 			try {
 				data = new Scanner(inputFile);
 				while(data.hasNextLine()){
-					if(data.nextLine().compareTo("Email") == 0){
+					if(data.nextLine().compareTo("Email") == 0){//skips the first line with the email tag
 						continue;
 					}
 					dataCount++;
@@ -210,7 +211,7 @@ public class Main {
 			}
 		}
 
-		//Goes through all of the hash functions and decides whether it could be in the Bloom Filter or is not
+		//Goes through all of the hash functions and decides whether it could be in the Bloom Filter or is not.
 		public boolean isProbablyOnFilter(String data){
 			for(int i = 0;i < hashFunctionSeeds.length;i++) {
 				int hashedDataPos = getHashPos(data, hashFunctionSeeds[i]);
@@ -221,7 +222,7 @@ public class Main {
 			return true;
 		}
 
-		//Prints the Bloom Filter, takes a long time if there's a lot of data.
+		//Prints the Bloom Filter, takes a long time if there's a lot of data though.
 		public void printFilter(){
 			for(int bit: filter){
 				System.out.println(bit);
