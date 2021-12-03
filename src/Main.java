@@ -7,9 +7,9 @@ import java.util.Scanner;
  * @author Kenneth-Aponte
  *
  */
+
 public class Main {
 
-	//Runs the project
 	public static void main(String[] args) {
 		Manager.run();
 	}
@@ -19,17 +19,20 @@ public class Main {
 		public static Scanner input = new Scanner(System.in);
 		public static final double FALSE_POSITIVE_PROBABILITY =  0.0000001;//final as this value is predetermined
 
-		//TODO: remove these
-		// /Users/kennethaponte/Downloads/emails.csv
-		// /Users/kennethaponte/Documents/emails2.csv
-		// /Users/kennethaponte/Documents/emails2_test.csv
-
-		//runs the projec
+		//Runs the project
 		public static void run(){
+			System.out.println("\n\n-----------------------------------------");
+			System.out.println("| Welcome to the Bloom Filter project!! |");
+			System.out.println("-----------------------------------------\n");
+
 			File inputFile_1 = getInputFile("\nTo create the Bloom Filter, please provide the path to the input file: ");
 			bF = createAndPopulateBloomFilter(inputFile_1);
 			File inputFile_2 = getInputFile("\nTo test the Bloom Filter, please provide the path to the input file: ");
 			File resultFile = testBloomFilter(inputFile_2);
+
+			System.out.println("\n\n-------------");
+			System.out.println("| GoodBye!! |");
+			System.out.println("-------------\n\n");
 
 			input.close();
 		}
@@ -39,9 +42,10 @@ public class Main {
 			File iF = null;
 			boolean validFile = false;
 
-			System.out.println("\n----------------------------------------------------------------------------------------------------------");
+			System.out.println("\n--------------------------------------------------------------------------------------------------------------------");
 			System.out.print(msg);
 
+			//once it finds a valid file, the loop stops and the program continues
 			while(!validFile){
 				iF = new File(input.nextLine());
 				if(!iF.exists()){
@@ -56,17 +60,20 @@ public class Main {
 
 		//Calculates all the parameters based on a given input File and created a respective Bloom Filter with those parameters.
 		public static BloomFilter createAndPopulateBloomFilter(File inputFile) {
+			//data count
 			long dC = getDataCount(inputFile);
+			//filter size
 			long fS = (long)Math.ceil((dC* Math.log(FALSE_POSITIVE_PROBABILITY)) / Math.log(1 / Math.pow(2, Math.log(2)))); //m = ceil((n * log(p)) / log(1 / pow(2, log(2))));
+			//hash count
 			long hC = Math.round( ((float)fS/dC) * Math.log(2)); //k = round((m / n) * log(2));
 
-			System.out.println("\n----------------------------------------------------------------------------------------------------------");
+			System.out.println("\n--------------------------------------------------------------------------------------------------------------------");
 			System.out.println("\nCalculated parameters for the Bloom Filter \n");
 			System.out.println("\tNumber of items in the filter: " + Long.toString(dC));
-			System.out.println("\n\tProbability of false positives: 0.0000001");
+			System.out.println("\n\tProbability of false positives: " + Double.toString(FALSE_POSITIVE_PROBABILITY));
 			System.out.println("\n\tSize of filter in bits: " + Long.toString(fS));
 			System.out.println("\n\tNumber of hash functions: " + Long.toString(hC));
-			System.out.println("\n----------------------------------------------------------------------------------------------------------");
+			System.out.println("\n--------------------------------------------------------------------------------------------------------------------");
 
 			System.out.println("\nBloom Filter is being populated please wait...");
 
@@ -107,7 +114,7 @@ public class Main {
 
 				while(data.hasNextLine()){
 					String email = data.nextLine();
-					if(email.compareTo("Email,Reult") == 0){//avoids the first line ^
+					if(email.compareTo("Email") == 0){//avoids the first line on the input file
 						continue;
 					}
 					if(bF.isProbablyOnFilter(email)){
@@ -126,8 +133,9 @@ public class Main {
 				System.out.println("An unexpected error has occurred:\n" + e);
 			}
 
-			System.out.println("\n----------------------------------------------------------------------------------------------------------");
-			System.out.println("Result saved in :" + res.getAbsolutePath());
+			System.out.println("\n--------------------------------------------------------------------------------------------------------------------");
+			System.out.println("\nResult saved in: " + res.getAbsolutePath());
+			System.out.println("\n--------------------------------------------------------------------------------------------------------------------");
 			return res;
 		}
 
@@ -184,7 +192,7 @@ public class Main {
 		//Returns the position that will be set to 1 in the bloom filter.
 		public int getHashPos(String dataToHash, int seed){
 			int hashedFunction = Math.abs(dataToHash.hashCode()*seed);
-			return hashedFunction % (int)filterSize;// % filter size so that the number doesn't go above the filter's sie
+			return hashedFunction % (int)filterSize;// % filter size so that the number doesn't go above the filter's sie.
 		}
 
 		//Prepares the array of seeds that will be used with the hash function.
