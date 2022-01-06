@@ -1,6 +1,11 @@
 ***README***
 - *How to run the project?*
 
+First download the .zip file containing Main: 
+
+[Bloom-Filter.zip](https://github.com/Kenneth-Aponte/Bloom-Filter/files/7824839/Bloom-Filter.zip)
+
+
 One must use the respective terminal commands to navigate and reach the inside of the project’s directory. After being located inside of the project folder (where the file Main.java should be located) one must compile the project. To do so use the following command:
 
     javac Main.java
