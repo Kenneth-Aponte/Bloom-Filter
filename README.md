@@ -21,3 +21,5 @@ The program will greet the user and ask for the first input file. This input fil
 - *How to pass in the input files?*
 
 The program will prompt the user when it needs a certain input file, at that point these should be provided with the full path.
+
+**Have a nice day! :)**
